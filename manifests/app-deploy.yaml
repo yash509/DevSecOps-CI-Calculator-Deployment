@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: ci-calculator-deployment
 spec:
-  replicas: 3 # You can adjust the number of replicas as needed
+  replicas: 6 # You can adjust the number of replicas as needed
   selector:
     matchLabels:
       app: ci-calculator
