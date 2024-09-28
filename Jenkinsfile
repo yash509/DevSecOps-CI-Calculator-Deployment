@@ -39,7 +39,7 @@ pipeline {
         
         stage('Checkout from Git') {                        
             steps {                                       
-                git branch: 'main', url: 'https://github.com/yash509/DevSecOps-StopWatch-WebApp-Deployment.git'
+                git branch: 'main', url: 'https://github.com/yash509/DevSecOps-CI-Calculator-Deployment.git'
             }
         }
         
@@ -183,7 +183,7 @@ pipeline {
                 script{
                     //dir('Band Website') {
                         withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                            sh "docker tag ci-calculator ${IMAGE_NAME}:${TAG}" 
+                            sh "docker tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:${TAG}" 
                         //}
                     }
                 }
@@ -339,7 +339,7 @@ pipeline {
                     // Always switch traffic based on DEPLOY_ENV
                     withKubeConfig(caCertificate: '', clusterName: 'App-Cluster', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
                         sh '''
-                            kubectl patch service stopwatch-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"stopwatch\\", \\"version\\": \\"''' + newEnv + '''\\"}}}" -n ${KUBE_NAMESPACE}
+                            kubectl patch service ci-calculator-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"ci-calculator\\", \\"version\\": \\"''' + newEnv + '''\\"}}}"
                         '''
                     }
                     echo "Traffic has been switched to the ${newEnv} environment."
@@ -358,13 +358,6 @@ pipeline {
             } 
         }
               
-        stage('Deployment Done') {
-            steps {
-                echo 'Deployed Succcessfully...'
-            }
-        }
-    }
-
         stage('Deployment Done') {
             steps {
                 echo 'Deployed Succcessfully...'
@@ -418,4 +411,3 @@ stage('Result') {
             parameters: [choice(name: 'action', choices: ['Success'], description: 'Approve deployment')]
         }
     }
-    
