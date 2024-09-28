@@ -315,7 +315,6 @@ pipeline {
                         
                         withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
                                 sh "kubectl apply -f ${deploymentFile}"
-                                sh 'kubectl apply -f deployment.yaml'
                                 sh 'kubectl apply -f service.yaml'
                                 sh 'kubectl apply -f job.yaml'
                                 sh 'kubectl apply -f pv.yaml'
@@ -337,7 +336,7 @@ pipeline {
                     def newEnv = params.DEPLOY_ENV
 
                     // Always switch traffic based on DEPLOY_ENV
-                    withKubeConfig(caCertificate: '', clusterName: 'App-Cluster', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
                         sh '''
                             kubectl patch service ci-calculator-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"ci-calculator\\", \\"version\\": \\"''' + newEnv + '''\\"}}}"
                         '''
